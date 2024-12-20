@@ -5,15 +5,16 @@ def personal_sum(numbers):
     # Перебор элементов в коллекции numbers
     for number in numbers:
         try:
-            result += number  # Пытаемся добавить число к результату
-        except TypeError:
+            result += float(number)  # Пытаемся добавить число к результату
+        except (ValueError, TypeError):
+            print(f'Некорректный тип данных для подсчёта суммы - {number}')  # Сообщение об ошибке
             incorrect_data += 1  # Увеличиваем счетчик некорректных данных при ошибке
 
     return result, incorrect_data  # Возвращаем кортеж с результатом и счетчиком
 
 
 def calculate_average(numbers):
-    # Проверяем, является ли numbers коллекцией (типа list, tuple или set)
+    # Проверяем, является ли numbers корректной коллекцией (типы: list, tuple или set)
     if not isinstance(numbers, (list, tuple, set)):
         print('В numbers записан некорректный тип данных')
         return None
@@ -23,15 +24,19 @@ def calculate_average(numbers):
 
     valid_data_count = len(numbers) - incorrect_data  # Количество корректных данных
 
+    # Проверяем деление на ноль
     try:
-        # Вычисляем среднее арифметическое
-        average = total_sum / valid_data_count
-        return average
-    except ZeroDivisionError:  # Обработка случаев деления на 0
-        return 0
+        average = total_sum / valid_data_count  # Вычисляем среднее арифметическое
+    except ZeroDivisionError:
+        return 0  # Если нет корректных данных, возвращаем 0
+
+    return average  # Возвращаем среднее арифметическое
+
 
 # Примеры вызовов функции calculate_average
-print(f'Результат 1: {calculate_average("1, 2, 3")}')  # Ожидаемый вывод: сообщение о некорректном типе
-print(f'Результат 2: {calculate_average([1, "Строка", 3, "Ещё Строка"])}')  # Ожидаемый вывод: 2.0 (среднее между 1 и 3)
-print(f'Результат 3: {calculate_average(567)}')  # Ожидаемый вывод: сообщение о некорректном типе
-print(f'Результат 4: {calculate_average([42, 15, 36, 13])}')  # Ожидаемый вывод: 26.5 (среднее арифметическое)
+print(f'Результат 1: {calculate_average("1, 2, 3")}')  # некорректный тип
+print(f'Результат 2: {calculate_average([1, "Строка", 3, "Ещё Строка"])}')  # Учитываются только числа
+print(f'Результат 3: {calculate_average(567)}')  # не коллекция
+print(f'Результат 4: {calculate_average([42, 15, 36, 13])}')  # Все должны работать
+
+
